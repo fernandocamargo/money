@@ -3,17 +3,18 @@ import React, { useMemo, memo } from 'react';
 
 const MoneyDefaultFormatter = ({
   components: { container: Container },
-  elements: { currency, value, symbol },
+  elements: { operator, currency, number, symbol },
+  negative,
   reverse,
 }) => {
   const children = useMemo(() => {
     switch (true) {
       case reverse:
-        return [value, symbol, currency];
+        return [negative && operator, number, symbol, currency];
       default:
-        return [symbol, currency, value];
+        return [negative && operator, symbol, currency, number];
     }
-  }, [reverse, currency, value, symbol]);
+  }, [reverse, negative, operator, currency, number, symbol]);
 
   return <Container>{children}</Container>;
 };
@@ -23,10 +24,12 @@ MoneyDefaultFormatter.propTypes = {
     container: elementType.isRequired,
   }).isRequired,
   elements: shape({
+    operator: node.isRequired,
     currency: node.isRequired,
-    value: node.isRequired,
+    number: node.isRequired,
     symbol: node.isRequired,
   }).isRequired,
+  negative: bool.isRequired,
   reverse: bool.isRequired,
 };
 

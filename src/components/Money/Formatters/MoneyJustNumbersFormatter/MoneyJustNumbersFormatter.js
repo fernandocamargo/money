@@ -1,16 +1,26 @@
 import { shape, elementType, node } from 'prop-types';
-import React, { memo } from 'react';
+import React, { useMemo, memo } from 'react';
 
 const MoneyJustNumbersFormatter = ({
   components: { container: Container },
-  elements: { value },
-}) => <Container>{value}</Container>;
+  elements: { operator, number },
+  negative,
+}) => {
+  const children = useMemo(() => [negative && operator, number], [
+    negative,
+    operator,
+    number,
+  ]);
+
+  return <Container>{children}</Container>;
+};
 
 MoneyJustNumbersFormatter.propTypes = {
   components: shape({
     container: elementType.isRequired,
   }).isRequired,
-  elements: shape({ value: node.isRequired }).isRequired,
+  elements: shape({ operator: node.isRequired, number: node.isRequired })
+    .isRequired,
 };
 
 export default memo(MoneyJustNumbersFormatter);

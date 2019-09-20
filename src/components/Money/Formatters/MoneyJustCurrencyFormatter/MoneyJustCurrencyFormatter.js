@@ -1,35 +1,35 @@
 import { shape, elementType, node, bool } from 'prop-types';
 import React, { useMemo, memo } from 'react';
 
-const MoneyJustSymbolFormatter = ({
+const MoneyJustCurrencyFormatter = ({
   components: { container: Container },
-  elements: { operator, number, symbol },
+  elements: { operator, number, currency },
   negative,
   reverse,
 }) => {
   const children = useMemo(() => {
     switch (true) {
       case reverse:
-        return [negative && operator, number, symbol];
+        return [negative && operator, number, currency];
       default:
-        return [negative && operator, symbol, number];
+        return [negative && operator, currency, number];
     }
-  }, [reverse, negative, operator, number, symbol]);
+  }, [reverse, negative, operator, number, currency]);
 
   return <Container>{children}</Container>;
 };
 
-MoneyJustSymbolFormatter.propTypes = {
+MoneyJustCurrencyFormatter.propTypes = {
   components: shape({
     container: elementType.isRequired,
   }).isRequired,
   elements: shape({
     operator: node.isRequired,
     number: node.isRequired,
-    symbol: node.isRequired,
+    currency: node.isRequired,
   }).isRequired,
   negative: bool.isRequired,
   reverse: bool.isRequired,
 };
 
-export default memo(MoneyJustSymbolFormatter);
+export default memo(MoneyJustCurrencyFormatter);

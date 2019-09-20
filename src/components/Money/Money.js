@@ -1,10 +1,11 @@
-import ISOCurrency from 'currency-codes';
-import { oneOf, oneOfType, string, number, elementType } from 'prop-types';
-import { useCallback, useMemo, createElement, memo } from 'react';
+import ISOCurrency from "currency-codes";
+import { oneOf, oneOfType, string, number, elementType } from "prop-types";
+import { useCallback, useMemo, createElement, memo } from "react";
 
-import { extracFragmentstFrom } from './Money.helpers';
-import { MoneyDefaultFormatter } from './Formatters';
-import withStyle from './Money.style';
+import { MoneyDefaultFormatter } from "./Formatters";
+import withStyle from "./Money.style";
+
+const NUMBER_WITH_SEPARATORS = /(\d+[.,]*)+/gi;
 
 const Money = ({
   className: containerClassName,
@@ -16,21 +17,29 @@ const Money = ({
 }) => {
   const getBoundComponentWith = useCallback(
     defaultProps => props =>
-      createElement('span', { ...defaultProps, ...props, ...extraProps }),
+      createElement("span", { ...defaultProps, ...extraProps, ...props }),
     [extraProps]
   );
-  const value = useMemo(() => Number(raw), [raw]);
+  const negative = useMemo(() => raw < 0, [raw]);
+  const value = useMemo(() => Math.abs(raw), [raw]);
+  const operator = useMemo(() => (negative ? "-" : "+"), [negative]);
   const formatted = useMemo(
     () =>
-      new Intl.NumberFormat(locale, { style: 'currency', currency }).format(
-        value
-      ),
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency
+      }).format(value),
     [locale, currency, value]
   );
-  const { fragments, reverse } = useMemo(
-    () => extracFragmentstFrom({ currency, formatted }),
-    [currency, formatted]
-  );
+  const { fragments, reverse } = useMemo(() => {
+    const [number] = formatted.match(NUMBER_WITH_SEPARATORS);
+    const symbol = formatted.replace(NUMBER_WITH_SEPARATORS, "");
+
+    return {
+      fragments: { operator, currency, symbol, number },
+      reverse: !!formatted.indexOf(symbol)
+    };
+  }, [operator, formatted, currency]);
   const classNames = useMemo(
     () =>
       Object.entries(fragments).reduce(
@@ -44,7 +53,7 @@ const Money = ({
       Object.entries(classNames).reduce(
         (stack, [type, className]) =>
           Object.assign(stack, {
-            [type]: getBoundComponentWith({ className }),
+            [type]: getBoundComponentWith({ className })
           }),
         {}
       ),
@@ -57,8 +66,8 @@ const Money = ({
           Object.assign(stack, {
             [type]: createElement(components[type], {
               key: type,
-              children: content,
-            }),
+              children: content
+            })
           }),
         {}
       ),
@@ -67,13 +76,14 @@ const Money = ({
 
   return createElement(format, {
     locale,
+    negative,
     value,
     formatted,
     fragments,
     reverse,
     classNames,
     components,
-    elements,
+    elements
   });
 };
 
@@ -82,12 +92,12 @@ Money.propTypes = {
   currency: oneOf(ISOCurrency.codes()).isRequired,
   children: oneOfType([string, number]).isRequired,
   format: elementType,
-  className: string.isRequired,
+  className: string.isRequired
 };
 
 Money.defaultProps = {
   locale: window.navigator.language,
-  format: MoneyDefaultFormatter,
+  format: MoneyDefaultFormatter
 };
 
 export default memo(withStyle(Money));

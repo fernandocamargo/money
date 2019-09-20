@@ -1,10 +1,7 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export default component => styled(component)`
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial,
-    sans-serif;
 
   span {
     display: inline-block;
