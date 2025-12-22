@@ -1,6 +1,6 @@
 # Money Component
 
-> A revolutionary approach to React component design: **Composition over Configuration**
+> A revolutionary approach to React component design: **[Composition over Configuration](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children)**
 
 ## The Problem
 
@@ -60,7 +60,7 @@ The `Money` component does one thing exceptionally well: **decomposition**.
 
 Internally, it:
 
-1. Parses the value using `Intl.NumberFormat` (locale-aware)
+1. Parses the value using [`Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat) (locale-aware)
 2. Extracts atomic fragments:
    - `operator`: "+" or "-"
    - `currency`: "EUR"
@@ -83,7 +83,7 @@ const MoneyJustNumbersFormatter = ({
   elements: { operator, number },
   negative,
 }) => {
-  const children = useMemo(
+  const children = useMemo(  // Memoized for performance
     () => [negative && operator, number],
     [negative, operator, number]
   );
@@ -163,7 +163,7 @@ const CustomFormatter = ({ elements: { symbol, number } }) => (
 5. **MoneyRoundedFormatter** - Abbreviated (1.2k, 3.5M)
 6. **MoneyGranularElementsFormatter** - Magnitude-based styling
 
-Each formatter is **15-88 lines**. Each is **independently testable**. Each is **tree-shakeable**.
+Each formatter is **15-88 lines**. Each is **independently testable**. Each is **[tree-shakeable](https://webpack.js.org/guides/tree-shaking/)**.
 
 ## Why This Matters
 
@@ -200,7 +200,7 @@ Want to color each digit differently based on magnitude? Want to animate the tra
 
 ### Performance Optimization
 
-Every computation is memoized with `useMemo`:
+Every computation is [memoized](https://react.dev/reference/react/useMemo) with [`useMemo`](https://react.dev/reference/react/useMemo):
 
 ```jsx
 const fragments = useMemo(() => {
@@ -210,7 +210,7 @@ const fragments = useMemo(() => {
 
 ### Locale Awareness
 
-Built on `Intl.NumberFormat` - handles all locale formatting automatically:
+Built on [`Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat) - handles all [locale formatting](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) automatically:
 
 ```jsx
 <Money locale="pt-BR" currency="BRL">1234.56</Money>
@@ -219,7 +219,7 @@ Built on `Intl.NumberFormat` - handles all locale formatting automatically:
 
 ### Type Safety
 
-PropTypes with ISO currency code validation:
+[PropTypes](https://reactjs.org/docs/typechecking-with-proptypes.html) with [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code validation:
 
 ```jsx
 Money.propTypes = {
@@ -230,7 +230,7 @@ Money.propTypes = {
 
 ### Component Factory Pattern
 
-Creates bound component functions for each fragment type:
+Creates bound component functions for each fragment type using [higher-order functions](https://eloquentjavascript.net/05_higher_order.html) and [`useCallback`](https://react.dev/reference/react/useCallback):
 
 ```jsx
 const getBoundComponentWith = useCallback(
@@ -246,12 +246,12 @@ This enables formatters to render fragments with custom props while maintaining 
 
 This project demonstrates mastery of:
 
-1. **React Composition Patterns** - Render props, component factories, element composition
+1. **[React Composition Patterns](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children)** - [Render props](https://react.dev/reference/react/cloneElement#passing-data-with-a-render-prop), component factories, element composition
 2. **API Design** - Minimal surface area, maximum flexibility
-3. **Separation of Concerns** - Data transformation vs. presentation logic
-4. **Performance** - Aggressive memoization, tree-shaking
-5. **Internationalization** - Locale-aware formatting with Intl API
-6. **Extensibility** - Open/closed principle in practice
+3. **[Separation of Concerns](https://en.wikipedia.org/wiki/Separation_of_concerns)** - Data transformation vs. presentation logic
+4. **Performance** - Aggressive [memoization](https://react.dev/reference/react/useMemo), [tree-shaking](https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking)
+5. **[Internationalization](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl)** - Locale-aware formatting with Intl API
+6. **Extensibility** - [Open/closed principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle) in practice
 7. **Problem Recognition** - Identifying and solving architectural anti-patterns
 
 ## The Inspiration
@@ -292,11 +292,12 @@ src/
 
 ## Tech Stack
 
-- React 16.9+ (Hooks)
-- styled-components
-- Intl.NumberFormat API
-- currency-codes (ISO 4217 validation)
-- numeral (number abbreviation)
+- [React](https://react.dev/) 16.9+ ([Hooks](https://react.dev/reference/react))
+- [styled-components](https://styled-components.com/)
+- [Intl.NumberFormat API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
+- [currency-codes](https://www.npmjs.com/package/currency-codes) ([ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) validation)
+- [numeral](https://www.npmjs.com/package/numeral) (number abbreviation)
+- [prop-types](https://www.npmjs.com/package/prop-types) (Runtime type checking)
 
 ## Creating Custom Formatters
 
@@ -365,14 +366,10 @@ const MoneyBoldSymbol = ({
 This isn't just a money formatting component. It's a demonstration of **architectural thinking**:
 
 - Recognizing anti-patterns (prop explosion)
-- Applying React's core philosophy (composition)
-- Designing for the pit of success (easy to extend, hard to break)
+- Applying [React's core philosophy](https://react.dev/learn/thinking-in-react) (composition)
+- Designing for the [pit of success](https://blog.codinghorror.com/falling-into-the-pit-of-success/) (easy to extend, hard to break)
 - Prioritizing developer experience (simple, powerful, predictable)
 
 The result: a component that's **more flexible** and **less complex** than traditional approaches.
 
 **That's the paradox worth showcasing**.
-
----
-
-Built by [Your Name] as a demonstration of component architecture mastery.
