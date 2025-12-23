@@ -72,6 +72,26 @@ Internally, it:
 
 **Key insight**: The Money component contains **zero presentation logic**. It's purely a data transformation pipeline.
 
+> [!NOTE]
+> **Historical Context**: When this component was originally conceived, the [`Intl.NumberFormat.prototype.formatToParts()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts) API didn't exist yet. The current implementation uses RegExp to parse the formatted string and extract fragments (symbol, number, etc.).
+>
+> If this were to be maintained or published as a package, migrating to `formatToParts()` would be a natural improvement - it provides a much more ergonomic way to decompose formatted numbers without parsing:
+>
+> ```javascript
+> new Intl.NumberFormat('en-US', {
+>   style: 'currency',
+>   currency: 'USD'
+> }).formatToParts(1234.56)
+> // Returns: [
+> //   { type: 'currency', value: '$' },
+> //   { type: 'integer', value: '1,234' },
+> //   { type: 'decimal', value: '.' },
+> //   { type: 'fraction', value: '56' }
+> // ]
+> ```
+>
+> However, the core architectural principle—**composition over configuration**—remains valuable regardless of the parsing implementation.
+
 ### Formatters: Simple Composition
 
 Formatters receive all the building blocks and simply arrange them:
@@ -722,6 +742,7 @@ This project demonstrates mastery of:
 6. **Extensibility** - [Open/closed principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle) in practice
 7. **Third-Party Integration** - Seamless integration with any library ecosystem
 8. **Problem Recognition** - Identifying and solving architectural anti-patterns
+9. **Technical Evolution** - Awareness of modern APIs and continuous improvement opportunities
 
 ## The Inspiration
 
@@ -862,7 +883,11 @@ This isn't just a money formatting component. It's a demonstration of **architec
 - Applying [React's core philosophy](https://react.dev/learn/thinking-in-react) (composition)
 - Designing for the [pit of success](https://blog.codinghorror.com/falling-into-the-pit-of-success/) (easy to extend, hard to break)
 - Prioritizing developer experience (simple, powerful, predictable)
+- Understanding when to improve implementation while preserving architecture
 
 The result: a component that's **more flexible** and **less complex** than traditional approaches.
 
 **That's the paradox worth showcasing**.
+
+> [!TIP]
+> **For Interviewers**: The use of RegExp parsing instead of `formatToParts()` demonstrates an important skill—knowing when implementation details can be improved while the core architecture remains sound. The compositional pattern is the valuable insight here; the parsing mechanism is just an implementation detail that can evolve with the platform.
