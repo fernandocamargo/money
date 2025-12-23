@@ -742,6 +742,30 @@ yarn start
 
 Open [http://localhost:3000](http://localhost:3000) to see all formatters in action.
 
+## Testing
+
+This project includes comprehensive test coverage with both unit and integration tests.
+
+```bash
+# Run unit tests (React Testing Library)
+yarn test
+
+# Run unit tests with coverage
+yarn test:unit
+
+# Run e2e tests (Playwright)
+yarn test:e2e
+
+# Run all tests
+yarn test:all
+```
+
+**Test Coverage:**
+- 70+ test cases
+- Unit tests for core component and all formatters
+- Integration tests for visual rendering and cross-browser compatibility
+- See [TESTING.md](./TESTING.md) for detailed testing documentation
+
 ## Project Structure
 
 ```
